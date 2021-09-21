@@ -7,8 +7,15 @@ This is a test. this is a test part 2.
 
 This is Lauren adding something.#2 #3
 this is patrick adding another thing. 
+<<<<<<< HEAD
 adding changes for permanent token
 
+=======
+Adding this change by Virginia 
+test - Virginia
+>>>>>>> c0db8ed777b5ed35048253039b4418f2da4c193f
+
+Adding another change by Antoinette
 ```{r}
 plot(cars)
 ```
