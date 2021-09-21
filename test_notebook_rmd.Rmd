@@ -5,6 +5,8 @@ output: html_notebook
 
 This is a test. this is a test part 2.
 
+This is Lauren adding something.
+
 ```{r}
 plot(cars)
 ```
