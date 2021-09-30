@@ -22,20 +22,14 @@ Problem: Do counties with younger median age values less likely to have higher c
 ```{r}
 
 library(readr)
-cov_vax_admin <- read_csv("cov_vax_admin.csv",
-col_names = TRUE,
-                       col_types = NULL)
-
-view(cov_vax_admin)
+cov_vax_admin <- read_csv("cov_vax_admin.csv")
 
 
 
 ```
 
 ```{r}
-ca_county_demographics <- read_csv("ca_county_demographics.csv",
-                                   col_names = TRUE,
-                       col_types = NULL)
-View(ca_county_demographics)
+ca_county_demographics <- read_csv("ca_county_demographics.csv")
+
 ```
 
