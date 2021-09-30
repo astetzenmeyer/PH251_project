@@ -1,0 +1,41 @@
+---
+title: 'Milestone #2'
+author: "Virginia Chan, Patrick Traynor, Antoinette Stetzenmeyer"
+date: "9/29/2021"
+output: pdf_document
+---
+
+
+
+```{r}
+#load libraries
+library(tidyverse)
+library(lubridate)
+```
+
+Description of dataset
+What is the data source? (1-2 sentences on where the data is coming from, dates included, etc.)
+How does the dataset relate to the group problem statement and question?
+Problem: Do counties with younger median age values less likely to have higher counts of vaccinated persons?
+
+
+```{r}
+
+library(readr)
+cov_vax_admin <- read_csv("cov_vax_admin.csv",
+col_names = TRUE,
+                       col_types = NULL)
+
+view(cov_vax_admin)
+
+
+
+```
+
+```{r}
+ca_county_demographics <- read_csv("ca_county_demographics.csv",
+                                   col_names = TRUE,
+                       col_types = NULL)
+View(ca_county_demographics)
+```
+
