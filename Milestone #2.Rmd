@@ -16,12 +16,13 @@ library(lubridate)
 Description of dataset
 What is the data source? (1-2 sentences on where the data is coming from, dates included, etc.)
 
-The data source for the COVID-19 Vaccine Progress Dashboard Data by ZIP Code data set is from the California Vaccine Progress Dashboard located on the California Open Data Portal website.
+The data source for the COVID-19 Vaccine Administered by Zip Code dataset is the California Immunization Registry and the American Community Survey's 2015-2019 5-Year data. 
 
-The data source for the CA county demographic dataset is based on US census data.
+The data source for the CA County Demographic dataset is based on US census data.
 
 How does the dataset relate to the group problem statement and question?
-Problem: Do counties with younger median age values less likely to have higher counts of vaccinated persons?
+
+There is growing concern that counties with younger median age are less likely to have higher counts of vaccinated persons. To investigate this, we need to explore the CA census demographics to compare median age values and proportions of vaccinate persons together on a county level. This will help us determine if there is any relationship between those two variables. 
 
 \newpage 
 
@@ -29,22 +30,15 @@ Problem: Do counties with younger median age values less likely to have higher c
 #Import statement
 library(readr)
 cov_vax_admin <- read_csv("cov_vax_admin.csv")
+cov_vax_admin
 
-
-
-```
-
-```{r}
 ca_county_demographics <- read_csv("ca_county_demographics.csv")
-
+ca_county_demographics
 ```
+
 \newpage 
 
-2.   identify data types for 5+ data elements/columns/variables for both data sets
-
-
-
-
+Identify data types for 5+ data elements/columns/variables for both data sets
 
 ```{r}
 #2 identify data types for 5+ data elements/columns/variables
