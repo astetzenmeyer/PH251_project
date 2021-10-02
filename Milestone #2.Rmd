@@ -56,7 +56,7 @@ explore some CA census demographics to compare median age values and proportions
 Columns/rows interested in: name of county, pop12 sqmi, median age, make up of 
 
 
-
+From COVID vax data set: count, persons fully vaxxed, persons partially vaxxed, age 12+ population(?)
 
 
 
