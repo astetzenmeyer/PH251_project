@@ -15,12 +15,18 @@ library(lubridate)
 
 Description of dataset
 What is the data source? (1-2 sentences on where the data is coming from, dates included, etc.)
+
+The data source for the COVID-19 Vaccine Progress Dashboard Data by ZIP Code data set is from the California Vaccine Progress Dashboard located on the California Open Data Portal website.
+
+The data source for the CA county demographic dataset is based on US census data.
+
 How does the dataset relate to the group problem statement and question?
 Problem: Do counties with younger median age values less likely to have higher counts of vaccinated persons?
 
+\newpage 
 
 ```{r}
-
+#Import statement
 library(readr)
 cov_vax_admin <- read_csv("cov_vax_admin.csv")
 
@@ -32,4 +38,71 @@ cov_vax_admin <- read_csv("cov_vax_admin.csv")
 ca_county_demographics <- read_csv("ca_county_demographics.csv")
 
 ```
+\newpage 
 
+2.   identify data types for 5+ data elements/columns/variables for both data sets
+
+
+
+
+
+```{r}
+#2 identify data types for 5+ data elements/columns/variables
+
+str(ca_county_demographics)
+```
+```
+
+
+
+
+
+explore some CA census demographics to compare median age values and proportions of vaccinated persons together on a county level
+
+Columns/rows interested in: name of county, pop12 sqmi, median age, make up of 
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+#identify data types for 5+ data elements/columns/variables
+
+str(cov_vax_admin)
+```
+want to know proportion of individuals vaccinated by age, county, and local health jurisdiciton.
+Some columns: as_of_date, zip code tabluation area, county, vaccine equity metric quartile, age 12 plus population, persons fully vaccinated, persons partially vaccinated, vem source (healthy places index score)
+
+Identify the desired type/format for each variable—will you need to convert any columns to numeric or another type? 
+
+
+
+\newpage 
+
+
+#3 Provide a basic description of the 5+ data elements
+Numeric: mean, median, range
+Character:  unique values/categories
+Or any other descriptives that will be useful to the analysis
+
+
+```{r}
+ca_county_demographic_total_median_age <- ca_county_demographics %>%
+  summarize(total_median_age = mean(med_age, na.rm = TRUE)) 
+
+  ca_county_demographic_range_age <- ca_county_demographics %>%
+  summarize(range = range(med_age, na.rm = TRUE)) 
+  
+  
+```
+example
+
+flights_mean_delay <- flights %>%
+  group_by(month, carrier) %>%
+  summarize(total_flights = n_distinct(flight), delay_avg = mean(dep_delay, na.rm = TRUE)) 
