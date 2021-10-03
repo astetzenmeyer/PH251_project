@@ -41,43 +41,33 @@ ca_county_demographics
 Identify data types for 5+ data elements/columns/variables for both data sets
 
 ```{r}
-#2 identify data types for 5+ data elements/columns/variables
+#2 Identify data types for 5+ data elements/columns/variables
+
+#viewing structure of both datasets
 
 str(ca_county_demographics)
-```
-```
-
-
-
-
-
-explore some CA census demographics to compare median age values and proportions of vaccinated persons together on a county level
-
-Columns/rows interested in: name of county, pop12 sqmi, median age, make up of 
-
-
-From COVID vax data set: count, persons fully vaxxed, persons partially vaxxed, age 12+ population(?)
-
-
-
-
-
-
-
-```{r}
-
-#identify data types for 5+ data elements/columns/variables
 
 str(cov_vax_admin)
 ```
-want to know proportion of individuals vaccinated by age, county, and local health jurisdiciton.
-Some columns: as_of_date, zip code tabluation area, county, vaccine equity metric quartile, age 12 plus population, persons fully vaccinated, persons partially vaccinated, vem source (healthy places index score)
+```
 
-Identify the desired type/format for each variable—will you need to convert any columns to numeric or another type? 
+The 5+ data elements/columns/variables we are interested in: 
 
+From COVID vax data set: county (county: chr), persons fully vaxxed (persons_fully_vaccinated: num), age 12+ population (age12_plus_population: num), zip code (zip_code_tabulation_area: num).
 
+County is the only character value of interest while the rest of the variables are numeric. 
+
+From the Census data set: median age (med_age: num), county name (name: chr), and overall population (pop2012: num). 
+
+County name is the only character value of interest while the rest of the variables are numeric. 
+
+All the variables we are interested in are in the desired type/format and we will not need to
+convert any columns to numeric or another type. 
 
 \newpage 
+
+
+
 
 
 #3 Provide a basic description of the 5+ data elements
@@ -87,12 +77,30 @@ Or any other descriptives that will be useful to the analysis
 
 
 ```{r}
-ca_county_demographic_total_median_age <- ca_county_demographics %>%
-  summarize(total_median_age = mean(med_age, na.rm = TRUE)) 
-
-  ca_county_demographic_range_age <- ca_county_demographics %>%
-  summarize(range = range(med_age, na.rm = TRUE)) 
+ca_county_demographic_total_mean_age <- ca_county_demographics %>%
+  summarize(total_mean_age = mean(med_age, na.rm = TRUE)) 
   
+(view(ca_county_demographic_total_mean_age))
+
+# A tibble: 1 x 1
+  #total_mean_age
+          # <dbl>
+#1           38.5
+
+#This is the unweighted mean of the medium ages across each county in 
+#California
+
+#Exploring distinct county and zipcodes in California
+
+unique(cov_vax_admin$county)
+
+unique(cov_vax_admin$zip_code_tabulation_area)
+
+#Exploring the total number of persons totally vaccinated per County
+
+total_vaccinated_california <- cov_vax_admin %>%
+group_by(county)%>%
+summarize(total_vax = sum(persons_fully_vaccinated,na.rm = TRUE))
   
 ```
 example
