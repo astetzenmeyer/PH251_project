@@ -66,10 +66,6 @@ convert any columns to numeric or another type.
 
 \newpage 
 
-
-
-
-
 #3 Provide a basic description of the 5+ data elements
 Numeric: mean, median, range
 Character:  unique values/categories
@@ -77,6 +73,9 @@ Or any other descriptives that will be useful to the analysis
 
 
 ```{r}
+#This is the unweighted mean of the medium ages across each county in 
+#California
+
 ca_county_demographic_total_mean_age <- ca_county_demographics %>%
   summarize(total_mean_age = mean(med_age, na.rm = TRUE)) 
   
@@ -87,8 +86,6 @@ ca_county_demographic_total_mean_age <- ca_county_demographics %>%
           # <dbl>
 #1           38.5
 
-#This is the unweighted mean of the medium ages across each county in 
-#California
 
 #Exploring distinct county and zipcodes in California
 
@@ -103,8 +100,3 @@ group_by(county)%>%
 summarize(total_vax = sum(persons_fully_vaccinated,na.rm = TRUE))
   
 ```
-example
-
-flights_mean_delay <- flights %>%
-  group_by(month, carrier) %>%
-  summarize(total_flights = n_distinct(flight), delay_avg = mean(dep_delay, na.rm = TRUE)) 
