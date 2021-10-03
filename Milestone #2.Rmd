@@ -98,5 +98,20 @@ unique(cov_vax_admin$zip_code_tabulation_area)
 total_vaccinated_california <- cov_vax_admin %>%
 group_by(county)%>%
 summarize(total_vax = sum(persons_fully_vaccinated,na.rm = TRUE))
-  
+
+#Exploring the total population for each County
+
+total_pop_california <- ca_county_demographics %>%
+group_by(name)%>%
+summarize(total_pop = sum(pop2012, na.rm = TRUE))
+
+#Exploring the total number of persons age 12 and above per County
+
+total_age12andabove_california <- cov_vax_admin %>%
+group_by(county)%>%
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE))
+
+
+
+
 ```
