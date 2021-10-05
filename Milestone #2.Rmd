@@ -53,19 +53,28 @@ str(cov_vax_admin)
 
 The 5+ data elements/columns/variables we are interested in: 
 
-From COVID vax data set: county (county: chr), persons fully vaxxed (persons_fully_vaccinated: num), age 12+ population (age12_plus_population: num), zip code (zip_code_tabulation_area: num).
+From COVID vax data set: county (county: chr), persons fully vaxxed 
+(persons_fully_vaccinated: num), 
+age 12+ population (age12_plus_population: num), 
+zip code (zip_code_tabulation_area: num).
 
-County is the only character value of interest while the rest of the variables are numeric. 
+County is the only character value of interest while the rest of the variables 
+are numeric. 
 
-From the Census data set: median age (med_age: num), county name (name: chr), and overall population (pop2012: num). 
+From the Census data set: median age (med_age: num), county name (name: chr), 
+and overall population (pop2012: num). 
 
-County name is the only character value of interest while the rest of the variables are numeric. 
+County name is the only character value of interest while the rest of the 
+variables are numeric. 
 
-All the variables we are interested in are in the desired type/format and we will not need to
-convert any columns to numeric or another type. 
+All the variables we are interested in are in the desired type/format 
+and we will not need to convert any columns to numeric or another type. 
+
+```{r}
+
+```
 
 \newpage 
-
 #3 Provide a basic description of the 5+ data elements
 Numeric: mean, median, range
 Character:  unique values/categories
@@ -86,7 +95,7 @@ ca_county_demographic_total_mean_age <- ca_county_demographics %>%
           # <dbl>
 #1           38.5
 
-#Exploring the median age for each county in California
+#Exploring the mean age for each county in California
 
 mean_age_county <- ca_county_demographics %>%
 group_by(name)%>%
@@ -104,6 +113,7 @@ total_vaccinated_california <- cov_vax_admin %>%
 group_by(county)%>%
 summarize(total_vax = sum(persons_fully_vaccinated,na.rm = TRUE))
 
+
 #Exploring the total population for each County
 
 total_pop_california <- ca_county_demographics %>%
@@ -115,8 +125,6 @@ summarize(total_pop = sum(pop2012, na.rm = TRUE))
 total_age12andabove_california <- cov_vax_admin %>%
 group_by(county)%>%
 summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE))
-
-
 
 
 ```
