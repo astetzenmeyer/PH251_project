@@ -1,7 +1,7 @@
 ---
 title: 'Milestone #2'
 author: "Virginia Chan, Patrick Traynor, Antoinette Stetzenmeyer"
-date: "9/29/2021"
+date: "10/4/2021"
 output: pdf_document
 ---
 
@@ -83,8 +83,7 @@ Or any other descriptives that will be useful to the analysis
 
 
 ```{r}
-#This is the unweighted mean of the medium ages across each county in 
-#California
+#This is the unweighted mean of the medium ages across each county in California
 
 ca_county_demographic_total_mean_age <- ca_county_demographics %>%
   summarize(total_mean_age = mean(med_age, na.rm = TRUE)) 
@@ -96,11 +95,10 @@ ca_county_demographic_total_mean_age <- ca_county_demographics %>%
           # <dbl>
 #1           38.5
 
-#Exploring the mean age for each county in California
+#Exploring the mean, median, minumum, and maximum age in California; (note, this data set gives us the totals for each county; each county is a record. Therefore, grouping each county of 1 county leaves a group of one, making the group_by command redundant)
 
-mean_age_county <- ca_county_demographics %>%
-summarize(med_age_piped = mean(med_age,na.rm = TRUE))
-mean_age_county
+mean_age <- ca_county_demographics %>%
+summarize(median_age = mean(med_age,na.rm = TRUE), median(med_age,na.rm = TRUE), min(med_age,na.rm = TRUE), max(med_age,na.rm = TRUE))
 
 #Exploring distinct county and zipcodes in California
 
@@ -122,7 +120,7 @@ summarize(total_vax = sum(persons_fully_vaccinated,na.rm = TRUE))
 sum(ca_county_demographics$pop2012)
 median(ca_county_demographics$pop2012)
 
-#Exploring the total number of persons age 12 and above per County
+#Exploring the total number, median, minimum, and maximium of persons age 12 and above per county
 
 sum(cov_vax_admin$age12_plus_population)
 
