@@ -86,6 +86,11 @@ ca_county_demographic_total_mean_age <- ca_county_demographics %>%
           # <dbl>
 #1           38.5
 
+#Exploring the median age for each county in California
+
+mean_age_county <- ca_county_demographics %>%
+group_by(name)%>%
+summarize(med_age = mean(sum(med_age,na.rm = TRUE)))
 
 #Exploring distinct county and zipcodes in California
 
