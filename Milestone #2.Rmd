@@ -49,7 +49,7 @@ str(ca_county_demographics)
 
 str(cov_vax_admin)
 ```
-```
+
 
 The 5+ data elements/columns/variables we are interested in: 
 
@@ -76,7 +76,8 @@ and we will not need to convert any columns to numeric or another type.
 
 \newpage 
 #3 Provide a basic description of the 5+ data elements
-Numeric: mean, median, range
+[in other words: what type of functions can you apply to these data elements (aka variables);
+Numeric: mean, median, range, max, summary
 Character:  unique values/categories
 Or any other descriptives that will be useful to the analysis
 
@@ -98,8 +99,8 @@ ca_county_demographic_total_mean_age <- ca_county_demographics %>%
 #Exploring the mean age for each county in California
 
 mean_age_county <- ca_county_demographics %>%
-group_by(name)%>%
-summarize(med_age = mean(sum(med_age,na.rm = TRUE)))
+summarize(med_age_piped = mean(med_age,na.rm = TRUE))
+mean_age_county
 
 #Exploring distinct county and zipcodes in California
 
@@ -109,6 +110,8 @@ unique(cov_vax_admin$zip_code_tabulation_area)
 
 #Exploring the total number of persons totally vaccinated per County
 
+zip_vector <- unique(cov_vax_admin$zip_code_tabulation_area)
+
 total_vaccinated_california <- cov_vax_admin %>%
 group_by(county)%>%
 summarize(total_vax = sum(persons_fully_vaccinated,na.rm = TRUE))
@@ -116,15 +119,17 @@ summarize(total_vax = sum(persons_fully_vaccinated,na.rm = TRUE))
 
 #Exploring the total population for each County
 
-total_pop_california <- ca_county_demographics %>%
-group_by(name)%>%
-summarize(total_pop = sum(pop2012, na.rm = TRUE))
+sum(ca_county_demographics$pop2012)
+median(ca_county_demographics$pop2012)
 
 #Exploring the total number of persons age 12 and above per County
 
+sum(cov_vax_admin$age12_plus_population)
+
 total_age12andabove_california <- cov_vax_admin %>%
 group_by(county)%>%
-summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE))
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE), miniumu_age_of_12_and_above = min(age12_plus_population, na.rm = TRUE), maximum_age_of_12_and_above = max(age12_plus_population, na.rm = TRUE))
+
 
 
 ```
