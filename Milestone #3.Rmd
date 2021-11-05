@@ -1,0 +1,116 @@
+---
+title: 'Milestone #3'
+author: "Virginia Chan, Patrick Traynor, Antoinette Stetzenmeyer"
+date: "11/4/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#load libraries
+library(tidyverse)
+library(lubridate)
+
+```
+
+
+
+```{r}
+
+library(readr)
+cov_vax_admin <- read_csv("cov_vax_admin.csv")
+cov_vax_admin
+
+ca_county_demographics <- read_csv("ca_county_demographics.csv")
+ca_county_demographics
+
+
+
+```
+
+
+```{r}
+
+unique(cov_vax_admin$as_of_date)
+
+```
+
+\newpage 
+#1 Subset rows or columns, as needed
+```{r}
+
+#Subset cov_vax_admin dataset by county, zipcode, and date
+total_age12andabove_california_county<- cov_vax_admin %>%
+  select(c(as_of_date, zip_code_tabulation_area, county, vaccine_equity_metric_quartile, age12_plus_population, persons_fully_vaccinated)) %>%
+  group_by(county, zip_code_tabulation_area, as_of_date) %>%
+  arrange(county)%>%
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE), miniumu_age_of_12_and_above = min(age12_plus_population, na.rm = TRUE), maximum_age_of_12_and_above = max(age12_plus_population, na.rm = TRUE))
+
+
+```
+
+```{r}
+
+total_age12andabove_california <- cov_vax_admin %>%
+  group_by(county)%>%
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE), miniumu_age_of_12_and_above = min(age12_plus_population, na.rm = TRUE), maximum_age_of_12_and_above = max(age12_plus_population, na.rm = TRUE))
+
+```
+
+\newpage 
+
+#2 Create new variables needed for analysis (minimum 2)
+New variables should be created based on existing columns; for example
+Calculating a rate, 
+Combining character strings 
+Etc
+If no new values are needed for final tables/graphs, please create 2 new variables anyway
+
+
+```{r}
+
+```
+
+\newpage 
+
+#3 Clean variables needed for analysis (minimum 2)
+Examples
+Recode invalid values
+Handle missing fields
+Recode categories
+Etc.
+If not needed for final analysis, please create at least 2 new variables anyway
+
+
+```{r}
+
+```
+
+\newpage 
+
+#4 Data dictionary based on clean dataset (minimum 4 data elements), including:
+Variable name
+Data type
+Description
+
+```{r}
+
+```
+
+\newpage 
+
+#5 One or more tables with descriptive statistics for 4 data elements
+
+
+```{r}
+
+```
+
+\newpage 
+
+#6 PDF that is professionally prepared for presentation
+Each part of the milestone is clearly on one page (use \newpage to push to a new page)
+Only the necessary information is outputted (you should suppress, for example, entire data frame outputs)
+Use of headers and sub headers to create an organized document
+
