@@ -53,11 +53,14 @@ summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_
 
 ```{r}
 
-#Patrick code
+#Patrick: this is simply another data set with a fwe more rows and taking the as
+#of date a bit earlier in the event the latest date of 9/14 would exclude some
+#counties - just in case. 
 
-total_age12andabove_california <- cov_vax_admin %>%
+total_age12andabove_california_as_of_8_14_21 <- cov_vax_admin %>%
+  filter(as_of_date == "8/24/2021") %>%
   group_by(county)%>%
-summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE), miniumu_age_of_12_and_above = min(age12_plus_population, na.rm = TRUE), maximum_age_of_12_and_above = max(age12_plus_population, na.rm = TRUE))
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE), miniumum_age_of_12_and_above = min(age12_plus_population, na.rm = TRUE), maximum_age_of_12_and_above = max(age12_plus_population, na.rm = TRUE))
 
 ```
 
@@ -87,7 +90,12 @@ If not needed for final analysis, please create at least 2 new variables anyway
 
 
 ```{r}
-
+#Patrick: I am just trying to pick some variable names 
+#in a data set so that we can demonstrate cleaning. This is one way to clean
+# in the event we wish to merge data sets. The keyed variables need to be all
+# lower or upper or a merge will not work.
+cleaned_cov_vax_admin <- cov_vax_admin %>%
+  rename_with(., ~tolower(gsub(" ","_", .x, fixed = T)))
 ```
 
 \newpage 
@@ -98,7 +106,21 @@ Data type
 Description
 
 ```{r}
+#Patrick this is format. We will professionalize it later perhaps using kable
+data_dict_for <- data.frame(Variable_Name = c("county","total_age12adnaabove",
+                                              "median_of_age_12_and_above",
+                                              "minimumm_age_of_12_and_above",
+                                              "maximum_age_of_12_and_above"),
+                            Data_Type = c("String","Numeric","Numeric",
+                                          "Numeric","Numeric"),
+                            Description = c("County Name",
+                                            "Total number of vaccinated people as of 8/14/21",
+                                           "Median vaccinated as of 8/14/21",
+                                           "Minimum vaccinated as of 8/14/21",
+                                           "Maximum vaccinated as of 8/14/21"), stringsAsFactors = F)
 
+str(total_age12andabove_california_as_of_8_14_21)
+  
 ```
 
 \newpage 
@@ -107,7 +129,9 @@ Description
 
 
 ```{r}
-
+#e.g., mean, median, max, etc. and what they mean.
+str(total_age12andabove_california_as_of_8_14_21)
+summary(total_age12andabove_california_as_of_8_14_21$total_age12andabove)
 ```
 
 \newpage 
