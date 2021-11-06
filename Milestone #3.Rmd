@@ -40,17 +40,20 @@ unique(cov_vax_admin$as_of_date)
 #1 Subset rows or columns, as needed
 ```{r}
 
-#Subset cov_vax_admin dataset by county, zipcode, and date
+#Subset cov_vax_admin dataset by county and recent dates (September 2021)
 total_age12andabove_california_county<- cov_vax_admin %>%
   select(c(as_of_date, zip_code_tabulation_area, county, vaccine_equity_metric_quartile, age12_plus_population, persons_fully_vaccinated)) %>%
-  group_by(county, zip_code_tabulation_area, as_of_date) %>%
+  filter(as_of_date ==  "9/7/2021"| as_of_date == "9/14/2021") %>%
+  group_by(county) %>%
   arrange(county)%>%
-summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE), miniumu_age_of_12_and_above = min(age12_plus_population, na.rm = TRUE), maximum_age_of_12_and_above = max(age12_plus_population, na.rm = TRUE))
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE))
 
 
 ```
 
 ```{r}
+
+#Patrick code
 
 total_age12andabove_california <- cov_vax_admin %>%
   group_by(county)%>%
