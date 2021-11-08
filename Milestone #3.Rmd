@@ -161,30 +161,33 @@ of mid September (September 14, 2021). These are the minimum and maximum values 
 
 
 ```{r}
+
+
 #this shows the minimum number of vaccinated and max # vaccinated
-summary(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated)
+#summary(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated)
 #this shows the mean and standard deviation
-mean(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated)
-sd(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated)
+#mean(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated)
+#sd(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated)
 
 #create a table of these descriptive statistics using these commands directly in a data.frame function.
 
 data_table_of_descriptives <- data.frame(
   Variable_Names = c("min","max","mean","standard deviation"), 
-  Persons_fully_vaccinated = c(min(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated),
-  max(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated),
-  mean(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated),
-  sd(age12plus_la_monthly_w_fl_mths$persons_fully_vaccinated)),
-  Persons_partially_vaccinated = c(min(age12plus_la_monthly_w_fl_mths$persons_partially_vaccinated),
-  max(age12plus_la_monthly_w_fl_mths$persons_partially_vaccinated),
-  mean(age12plus_la_monthly_w_fl_mths$persons_partially_vaccinated),
-  sd(age12plus_la_monthly_w_fl_mths$persons_partially_vaccinated)),
-  Population_12_or_more_of_age = c(min(age12plus_la_monthly_w_fl_mths$age12_plus_population),
-  max(age12plus_la_monthly_w_fl_mths$age12_plus_population),
-  mean(age12plus_la_monthly_w_fl_mths$age12_plus_population),
-  sd(age12plus_la_monthly_w_fl_mths$age12_plus_population)))
+  Persons_fully_vaccinated = c(min(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated),
+  max(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated),
+  mean(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated),
+  sd(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated)),
+  Pop_2012 = c(min(cleaned_merged_dataset_pop_vax_new_variables$pop2012),
+  max(cleaned_merged_dataset_pop_vax_new_variables$pop2012),
+  mean(cleaned_merged_dataset_pop_vax_new_variables$pop2012),
+  sd(cleaned_merged_dataset_pop_vax_new_variables$pop2012)),
+  Eligible_vax_rate = c(min(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate),
+  max(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate),
+  mean(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate),
+  sd(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate)))
 
-kable(data_table_of_descriptives, booktabs = T, format = "pipe", caption = "This shows the minimum, maximum, mean, and standard deviation for the variables included")
+kable(data_table_of_descriptives, booktabs = T, format = "pipe", caption = 
+        "This shows the minimum, maximum, mean, and standard deviation for the variables included")
   
 ```
 From this we can see that the minimum number is 130,0878. This coincides with
