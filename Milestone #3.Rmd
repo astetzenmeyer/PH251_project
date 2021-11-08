@@ -46,13 +46,15 @@ We can see that the first date is January 5, 2021 and the final date is Septembe
 ```{r}
 
 #Antoinette: Subset cov_vax_admin dataset by county and recent dates (September 2021)
-total_age12andabove_california_county<- cov_vax_admin %>%
-  select(c(as_of_date, zip_code_tabulation_area, county, vaccine_equity_metric_quartile, age12_plus_population, persons_fully_vaccinated)) %>%
-  filter(as_of_date ==  "9/7/2021"| as_of_date == "9/14/2021") %>%
+total_age12andabove<- cov_vax_admin %>%
+  filter(as_of_date == "9/14/2021") %>%
   group_by(county) %>%
   arrange(county)%>%
-summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE))
+  drop_na(county) %>%
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), 
+         persons_fully_vaccinated = sum(persons_fully_vaccinated,na.rm = TRUE))
 
+#sum of age 12+ population per county 
 
 ```
 
@@ -62,13 +64,14 @@ First we need to select only pertinent variables (columns). We need the
 as_of_date, county, age12_plus_population, persons_fully_vaccinated, persons_partially_vaccinated variables. We also need to filter out all other 
 counties but keep Los Angeles. 
 ```{r}
-#Patrick: Research Question: By how much has the monthly vaccination rate been increasing in LA County as of January 1, 2021? 
- 
-library("lubridate")
-age12plus_la_monthly <- cov_vax_admin %>%
-  select(as_of_date, county, age12_plus_population, persons_fully_vaccinated, persons_partially_vaccinated) %>%
-  drop_na(persons_fully_vaccinated) %>%
-  filter(county == "LOS ANGELES")
+
+total_pop <- ca_county_demographics %>%
+  select(name, pop2012) %>% 
+  mutate(name=str_to_upper(name))
+
+#merge the two datasets 
+
+merged_dataset_pop_vax <- inner_join(total_age12andabove, total_pop, by=c("county"="name"))
 ```
 
 \newpage 
@@ -82,32 +85,10 @@ If no new values are needed for final tables/graphs, please create 2 new variabl
 We needed to create another variable for the rate fully vaccinated. Also, for interest we will create a variable for the rate partially vaccinated. Additionally, we created a column month. 
 
 ```{r}
-#Patrick - we created month, rate, 
-age12plus_la_monthly <- cov_vax_admin %>%
-  select(as_of_date, county, age12_plus_population, persons_fully_vaccinated, persons_partially_vaccinated) %>%
-  #this is part of cleaning - we had some zip codes with NA values in January. 
-  #this may be due to the vaccine not being accessible in many zip codes at that time
-  drop_na(persons_fully_vaccinated) %>%
-  filter(county == "LOS ANGELES") %>%
-  group_by(as_of_date) %>%
-  summarize(persons_fully_vaccinated = sum(persons_fully_vaccinated),
-            persons_partially_vaccinated = sum(persons_partially_vaccinated),
-            age12_plus_population = sum(age12_plus_population)) %>%
-  mutate(as_of_date = mdy(as_of_date)) %>%
-  #this is part of cleaning as not all dates in the as_of_date field were arranged in chronological order. 
-  arrange(as_of_date) %>%
-  #we will create months from the as_of_date field.
-  mutate(month_name = month(as_of_date, label = T)) %>%
-  mutate(month = month(as_of_date, label = F))%>%
-  group_by(month_name) %>%
-  #after grouping by month above, we then get the cumulative total (max) for each month. 
-  summarize(persons_fully_vaccinated = max(persons_fully_vaccinated), 
-            persons_partially_vaccinated = max(persons_partially_vaccinated),
-            age12_plus_population = max(age12_plus_population)) %>%
-  #finally we add the two rate fields.
-  mutate(rate_fully_vax = (persons_fully_vaccinated/age12_plus_population)*100,
-         rate_part_vax = 
-           (persons_partially_vaccinated/age12_plus_population)*100)
+
+merged_dataset_pop_vax_new_variables <- merged_dataset_pop_vax %>%
+  mutate(elg_vax_rate=(persons_fully_vaccinated/total_age12andabove)) %>%
+  mutate(ovrl_vax_rate=(persons_fully_vaccinated/pop2012))
 ```
 
 \newpage 
@@ -119,31 +100,17 @@ Handle missing fields
 Recode categories
 Etc.
 If not needed for final analysis, please create at least 2 new variables anyway
-Although the data were mostly from above. To demonstrate that our team can change variable names to upper or lower cases remove characters, we have included the code below. For the part, we simply changed variable names to upper case and replaced underscores with spaces. Then, for the second code, we changed them back. 
 
-Then, this can considered part of cleaning. We changed the month numbers, e.g. 1, 2, 3, to January, February, March. 
 
 ```{r}
-#Patrick: We are creating two variables to clean
-#first create variable names in upper case to spaces
-capitalized_data_set  <- age12plus_la_monthly %>%
-  rename_with(., ~toupper(gsub("_"," ", .x, fixed = T)))
-#Patrick: now we are going to clean by changing it back to snake case
-capitalized_data_set <- capitalized_data_set %>%
-  rename_with(., ~tolower(gsub(" ","_", .x, fixed = T)))
+#we will change the county from all uppercase to title  
+#and create the rates to percentage with 2 decimal place
 
-#Patrick: Change abbreviated dates to full names
-age12plus_la_monthly_w_fl_mths <- age12plus_la_monthly %>%
-  mutate(month_name = 
-           if_else(month_name == "Jan","January", 
-                   if_else(month_name == "Feb","February", 
-                           if_else(month_name == "Mar","March", 
-                                   if_else(month_name == "Apr","April",
-                                           if_else(month_name == "May","May",
-                                                   if_else(
-    month_name == "Jun","June", 
-    if_else(month_name == "Jul","July",if_else(month_name == "Aug","August",if_else(month_name == "Sep","September","NA"))))))))))
-
+cleaned_merged_dataset_pop_vax_new_variables <- 
+  merged_dataset_pop_vax_new_variables %>%
+  mutate(county=str_to_title(county)) %>%
+  mutate(elg_vax_rate=round((elg_vax_rate) *100,2),
+         ovrl_vax_rate=round((ovrl_vax_rate) *100,2))
 ```
 
 \newpage 
@@ -156,29 +123,31 @@ Description
 Below is a data dictionary descibing all the variables used for this analysis. 
 ```{r}
 #Patrick this is format. We will professionalize it later perhaps using kable
-data_dict_age12_pl_w_mon <- data.frame(
-Variable_Name = c("month_name","persons_fully_vaccinated",
-                  "persons_partially_vaccinated",
-                  "age12_plus_population",
-                  "rate_fully_vax",
-                  "rate_part_vax"),
+data_dict_age12_pl <- data.frame(
+Variable_Name = c("county","total_age12andabove",
+                  "persons_fully_vaccinated",
+                  "pop2012",
+                  "elg_vax_rate",
+                  "ovrl_vax_rate"),
                             Data_Type = c("Character", rep("Double", 5)),
-                            Description = c("Month Name",
-  "Cumulative number of vaccinated people",
-  "Cumulative number of partially vaccinated people",
-  "Number of eligible people to be vaccinated as of the given date",
+                            Description = c("County Name",
+  "Eligble vaccinated population (12 years & above)",
+  "Number of individuals that are fully vaccinated",
+  "Latest census taken in year 2012",
   "Percent of eligible population that is fully vaccinated",
-  "Percent of partially vaccinated people"), stringsAsFactors = F)
-head(age12plus_la_monthly_w_fl_mths)
+  "Percent of overall population that is fully vaccinated"), 
+stringsAsFactors = F)
+
+head(data_dict_age12_pl)
+
 ```
 
 \newpage
 ```{r}
-colnames(age12plus_la_monthly_w_fl_mths)
   #Patrick: Make this a professionally looking table
 library(kableExtra)
-kable(data_dict_age12_pl_w_mon, format = "pipe", booktabs = T, caption = "Data
-      Dictionary for COVID-19 Vaccination Rates for LA County from January to 
+kable(data_dict_age12_pl, format = "pipe", booktabs = T, caption = "Data
+      Dictionary for COVID-19 Vaccination Rates for California from January to 
       Mid September")
 ```
 
