@@ -1,0 +1,157 @@
+---
+title: 'Milestone #3'
+author: "Virginia Chan, Patrick Traynor, Antoinette Stetzenmeyer"
+date: "11/8/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#load libraries
+library(tidyverse)
+library(lubridate)
+library(kableExtra)
+```
+
+
+This is the code used to load the two data sets of interest: cox_vax_admin.cvs
+and ca_county_demographics.csv. The first 10 rows are provided to provide a 
+sample of the variables and values
+```{r}
+
+library(readr)
+cov_vax_admin <- read_csv("cov_vax_admin.csv")
+head(cov_vax_admin)
+ca_county_demographics <- read_csv("ca_county_demographics.csv")
+head(ca_county_demographics)
+
+```
+
+This is to identify all of the unique dates in the cov_vax_admin.csv data frame.
+It shows cumulative totals, that is, prior to, the date provided.
+```{r}
+
+unique(cov_vax_admin$as_of_date)
+
+```
+We can see that the first date is January 5, 2021 and the final date is September
+14, 2021.
+\newpage 
+
+# First Task: Subset rows or columns, as needed
+```{r}
+total_age12andabove<- cov_vax_admin %>%
+  filter(as_of_date == "9/14/2021") %>%
+  group_by(county) %>%
+  arrange(county)%>%
+  drop_na(county) %>%
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), 
+         persons_fully_vaccinated = sum(persons_fully_vaccinated,na.rm = TRUE))
+
+```
+
+
+We are merging the 2 datasets. For the demographics dataset, we are only keep the columns for county and population as of 2012. Then, we merged this dataset with COVID vaccinations dataset. 
+```{r}
+
+total_pop <- ca_county_demographics %>%
+  select(name, pop2012) %>% 
+  mutate(name=str_to_upper(name))
+
+merged_dataset_pop_vax <- inner_join(total_age12andabove, total_pop, by=c("county"="name"))
+```
+
+\newpage 
+
+# Second Task: Create new variables needed for analysis (minimum 2)
+We created 2 new variables: elg_vax_rate and ovrl_vax_rate.  
+
+```{r}
+
+merged_dataset_pop_vax_new_variables <- merged_dataset_pop_vax %>%
+  mutate(elg_vax_rate=(persons_fully_vaccinated/total_age12andabove)) %>%
+  mutate(ovrl_vax_rate=(persons_fully_vaccinated/pop2012))
+
+```
+
+\newpage 
+
+# Third Task Clean variables needed for analysis (minimum 2)
+Here, we update the county column to be title case and rounded the 2 new variables to be displayed as percentages with 2 decimal place.
+
+
+```{r}
+
+cleaned_merged_dataset_pop_vax_new_variables <- 
+  merged_dataset_pop_vax_new_variables %>%
+  mutate(county=str_to_title(county)) %>%
+  mutate(elg_vax_rate=round((elg_vax_rate) *100,2),
+         ovrl_vax_rate=round((ovrl_vax_rate) *100,2))
+```
+
+\newpage 
+
+# Fourth Task: Data dictionary based on clean dataset (minimum 4 data elements), including:
+Variable name
+Data type
+Description
+
+Below is a data dictionary descibing all the variables used for this analysis. 
+```{r,include=FALSE, echo=FALSE}
+#Patrick this is format. We will professionalize it later perhaps using kable
+data_dict_age12_pl <- data.frame(
+Variable_Name = c("county","total_age12andabove",
+                  "persons_fully_vaccinated",
+                  "pop2012",
+                  "elg_vax_rate",
+                  "ovrl_vax_rate"),
+                            Data_Type = c("Character", rep("Double", 5)),
+                            Description = c("County Name",
+  "Eligble vaccinated population (12 years & above)",
+  "Number of individuals that are fully vaccinated",
+  "Latest census taken in year 2012",
+  "Percent of eligible population that is fully vaccinated",
+  "Percent of overall population that is fully vaccinated"), 
+stringsAsFactors = F)
+
+head(data_dict_age12_pl)
+
+
+```
+
+```{r}
+kable(data_dict_age12_pl, format = "pipe", booktabs = T, caption = "Data
+      Dictionary for COVID-19 Vaccination Rates for California from January to 
+      Mid September")
+```
+
+
+\newpage 
+
+# Fifth Task: One or more tables with descriptive statistics for 4 data elements
+We calculated the mean, maximum, minimum, and standard deviation for the 2 new variables of persons fully vaccinated and person who were eligible to receive a vaccine.
+
+
+```{r}
+
+data_table_of_descriptives <- data.frame(
+  Variable_Names = c("min","max","mean","standard deviation"), 
+  Persons_fully_vaccinated = 
+    c(min(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated),
+  max(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated),
+  mean(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated),
+  sd(cleaned_merged_dataset_pop_vax_new_variables$persons_fully_vaccinated)),
+  Pop_2012 = c(min(cleaned_merged_dataset_pop_vax_new_variables$pop2012),
+  max(cleaned_merged_dataset_pop_vax_new_variables$pop2012),
+  mean(cleaned_merged_dataset_pop_vax_new_variables$pop2012),
+  sd(cleaned_merged_dataset_pop_vax_new_variables$pop2012)),
+  Eligible_vax_rate = c(min(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate),
+  max(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate),
+  mean(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate),
+  sd(cleaned_merged_dataset_pop_vax_new_variables$elg_vax_rate)))
+
+kable(data_table_of_descriptives, booktabs = T, format = "pipe", caption = 
+"This shows the minimum, maximum, mean, and standard deviation for the variables included")
+  
+```
