@@ -57,13 +57,7 @@ summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE),
 #sum of age 12+ population per county 
 =======
 
-
-
-
-cox_vax_admintitle<- cox_vax_admin %>%
-  mutate(county= str_to_title(cox_vax_admin$county))
-  
-  str_to_title(cov_vax_admin$county) 
+#mutate(cox_vax_admin, county = str_to_title(cov_vax_admin$county) )
 
 total_age12andabove_california_county<- cov_vax_admin %>%
   select(c(as_of_date, zip_code_tabulation_area, county, vaccine_equity_metric_quartile, age12_plus_population, persons_fully_vaccinated)) %>%
