@@ -44,8 +44,8 @@ We can see that the first date is January 5, 2021 and the final date is Septembe
 
 # First Task: Subset rows or columns, as needed
 ```{r}
-
 #Antoinette: Subset cov_vax_admin dataset by county and recent dates (September 2021)
+<<<<<<< HEAD
 total_age12andabove<- cov_vax_admin %>%
   filter(as_of_date == "9/14/2021") %>%
   group_by(county) %>%
@@ -55,6 +55,30 @@ summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE),
          persons_fully_vaccinated = sum(persons_fully_vaccinated,na.rm = TRUE))
 
 #sum of age 12+ population per county 
+=======
+
+
+
+
+cox_vax_admintitle<- cox_vax_admin %>%
+  mutate(county= str_to_title(cox_vax_admin$county))
+  
+  str_to_title(cov_vax_admin$county) 
+
+total_age12andabove_california_county<- cov_vax_admin %>%
+  select(c(as_of_date, zip_code_tabulation_area, county, vaccine_equity_metric_quartile, age12_plus_population, persons_fully_vaccinated)) %>%
+  filter(as_of_date ==  "9/7/2021"| as_of_date == "9/14/2021") %>%
+  group_by(county) %>%
+  arrange(county)%>%
+summarize(total_age12andabove = sum(age12_plus_population,na.rm = TRUE), median_of_age_12_and_above = median(age12_plus_population, na.rm = TRUE))
+```
+
+
+```{r}
+#Antoinette: Filter by county and total population
+ca_county_demographic_totalpop <- ca_county_demographics %>%
+  select(c(name, pop2012))
+>>>>>>> b6e797b1d8936c83a3d541fb540993d9bd9a0235
 
 ```
 
@@ -85,10 +109,51 @@ If no new values are needed for final tables/graphs, please create 2 new variabl
 We needed to create another variable for the rate fully vaccinated. Also, for interest we will create a variable for the rate partially vaccinated. Additionally, we created a column month. 
 
 ```{r}
+<<<<<<< HEAD
 
 merged_dataset_pop_vax_new_variables <- merged_dataset_pop_vax %>%
   mutate(elg_vax_rate=(persons_fully_vaccinated/total_age12andabove)) %>%
   mutate(ovrl_vax_rate=(persons_fully_vaccinated/pop2012))
+=======
+#Patrick - we created month, rate, 
+age12plus_la_monthly <- cov_vax_admin %>%
+  select(as_of_date, county, age12_plus_population, persons_fully_vaccinated, persons_partially_vaccinated) %>%
+  #this is part of cleaning - we had some zip codes with NA values in January. 
+  #this may be due to the vaccine not being accessible in many zip codes at that time
+  drop_na(persons_fully_vaccinated) %>%
+  filter(county == "LOS ANGELES") %>%
+  group_by(as_of_date) %>%
+  summarize(persons_fully_vaccinated = sum(persons_fully_vaccinated),
+            persons_partially_vaccinated = sum(persons_partially_vaccinated),
+            age12_plus_population = sum(age12_plus_population)) %>%
+  mutate(as_of_date = mdy(as_of_date)) %>%
+  #this is part of cleaning as not all dates in the as_of_date field were arranged in chronological order. 
+  arrange(as_of_date) %>%
+  #we will create months from the as_of_date field.
+  mutate(month_name = month(as_of_date, label = T)) %>%
+  mutate(month = month(as_of_date, label = F))%>%
+  group_by(month_name) %>%
+  #after grouping by month above, we then get the cumulative total (max) for each month. 
+  summarize(persons_fully_vaccinated = max(persons_fully_vaccinated), 
+            persons_partially_vaccinated = max(persons_partially_vaccinated),
+            age12_plus_population = max(age12_plus_population)) %>%
+  #finally we add the two rate fields.
+  mutate(rate_fully_vax = (persons_fully_vaccinated/age12_plus_population)*100,
+         rate_part_vax = 
+           (persons_partially_vaccinated/age12_plus_population)*100)
+
+```
+
+```{r}
+
+#Antoinette: Combine two excel to create third variable (total age12 and above/total pop)
+
+left_join_age12plus_lacounty <- full_join(total_age12andabove_california_county, ca_county_demographic_totalpop, by=c("county" = "name")) %>%
+mutate(age12plusproportion = total_age12andabove / pop2012)
+
+#total_age12andabove_california_county
+
+>>>>>>> b6e797b1d8936c83a3d541fb540993d9bd9a0235
 ```
 
 \newpage 
