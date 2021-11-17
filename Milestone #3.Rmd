@@ -50,7 +50,7 @@ We can see that the first date is January 5, 2021 and the final date is Septembe
 
 
 cox_vax_admintitle<- cox_vax_admin %>%
-  mutate(county= str_to_title(cox_vax_admin$county))
+  mutate(county = str_to_title(cox_vax_admin$county))
   
   str_to_title(cov_vax_admin$county) 
 
@@ -170,6 +170,7 @@ age12plus_la_monthly_w_fl_mths <- age12plus_la_monthly %>%
     month_name == "Jun","June", 
     if_else(month_name == "Jul","July",if_else(month_name == "Aug","August",if_else(month_name == "Sep","September","NA"))))))))))
 
+rename_with(ca_county_demographics$name, ~toupper)
 ```
 
 \newpage 
