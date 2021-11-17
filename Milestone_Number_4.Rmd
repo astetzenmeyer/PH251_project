@@ -1,5 +1,5 @@
 ---
-title: "Miletone_No_3"
+title: "Miletone_No_4"
 author: "Patrick Traynor, Ph.D., R.D., Virginia Chan, Antoinette Stetzenmeyer"
 date: "11/11/2021"
 output: html_document
@@ -39,10 +39,12 @@ cov_vax_admin_2 <- cov_vax_admin_1 %>%
 # calculate average vaccination rate by county
 # Your task is to explore the Vaccine Progress Dashboard and locate the most recent vaccination data, including a percentage of fully vaccinated persons. If you find any missing values, you'll need to find a way to do *mean imputation* with the missing values on a zip code level, (substitute an average value to fill in the NAs values from the county level averages)
 
+<<<<<<< HEAD
 
 #get the mean rate for each county
 
-means_by_county <- cov_vax_admin_2 %>% group_by(county) %>%
+means_by_county <- cov_vax_admin_2 %>% 
+  group_by(county) %>%
   summarize(mean = mean(persons_fully_vaccinated, na.rm = T))
 
 # Remove NA counties because we don't know which county they are 
@@ -57,7 +59,7 @@ cov_vax_admin_3 <- inner_join(cov_vax_admin_2, means_by_county,
               by = "county")
 
 cov_vax_admin_4 <- cov_vax_admin_3 %>% 
-  mutate(new_value = if_else(is.na(persons_fully_vaccinated),
+  mutate(num_fully_vax_wo_NA = if_else(is.na(persons_fully_vaccinated),
                                     mean,
                                     persons_fully_vaccinated))
   
@@ -68,8 +70,9 @@ table(is.na(cov_vax_admin_4$age12_plus_population))
 ```
 ```{r}
 # Get the rate of vaccination
-cov_vax_admin_5 <- cov_vax_admin_4 %>% group_by(county) %>%
-  summarise(total_vax = sum(new_value),
+cov_vax_admin_5 <- cov_vax_admin_4 %>% 
+  group_by(county) %>%
+  summarise(total_vax = sum(num_fully_vax_wo_NA),
             total_pop = sum(age12_plus_population),
             rate = round((total_vax/total_pop)*100, 2))
 
@@ -77,7 +80,7 @@ head(cov_vax_admin_5)
 ```
 
 ```{r}
-#install.packages("DT")
+install.packages("DT")
 library("DT")
 
 datatable(cov_vax_admin_5, 
@@ -94,6 +97,32 @@ datatable(cov_vax_admin_5,
           ) %>%
           formatRound(2:4,2) %>%
   formatStyle(1,color="blue")
+=======
+#first determine "percentage of fully vaccinated persons."
+cov_vax_admin_3 <-cov_vax_admin_2 %>%
+  mutate(pct_fully_vax = round((
+    persons_fully_vaccinated/age12_plus_population)*100,2))
+
+#get the mean rate for each county
+
+mean_county_vax_rate <- cov_vax_admin_3 %>%
+  group_by(county) %>%
+  summarize(mean_vax_rate = mean(pct_fully_vax, na.rm = T))
+  
+  
+
+
+
+
+
+
+table(is.na(cov_vax_admin_1$persons_fully_vaccinated))
+
+cov_vax_admin_3 <- cov_vax_admin_2 %>%
+  group_by(county) %>%
+  summarize(mean_vax = mean(persons_fully_vaccinated, na.rm = T))
+  
+>>>>>>> c82c7d2192548101a8eeee7bff57f844b565aea7
 ```
 
 
