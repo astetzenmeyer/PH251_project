@@ -39,30 +39,61 @@ cov_vax_admin_2 <- cov_vax_admin_1 %>%
 # calculate average vaccination rate by county
 # Your task is to explore the Vaccine Progress Dashboard and locate the most recent vaccination data, including a percentage of fully vaccinated persons. If you find any missing values, you'll need to find a way to do *mean imputation* with the missing values on a zip code level, (substitute an average value to fill in the NAs values from the county level averages)
 
-#first determine "percentage of fully vaccinated persons."
-cov_vax_admin_3 <-cov_vax_admin_2 %>%
-  mutate(pct_fully_vax = round((
-    persons_fully_vaccinated/age12_plus_population)*100,2))
 
 #get the mean rate for each county
 
-mean_county_vax_rate <- cov_vax_admin_3 %>%
-  group_by(county) %>%
-  summarize(mean_vax_rate = mean(pct_fully_vax, na.rm = T))
+means_by_county <- cov_vax_admin_2 %>% group_by(county) %>%
+  summarize(mean = mean(persons_fully_vaccinated, na.rm = T))
+
+# Remove NA counties because we don't know which county they are 
+cov_vax_admin_2 <- cov_vax_admin_2 %>% drop_na(county)
+
+#check to see if there are any NA's
+table(is.na(cov_vax_admin_2$persons_fully_vaccinated))
+#yes there are
+
+# Inner join mean values into the cov_vax_admin_2 table
+cov_vax_admin_3 <- inner_join(cov_vax_admin_2, means_by_county,
+              by = "county")
+
+cov_vax_admin_4 <- cov_vax_admin_3 %>% 
+  mutate(new_value = if_else(is.na(persons_fully_vaccinated),
+                                    mean,
+                                    persons_fully_vaccinated))
   
-  
+```
+```{r}
+table(is.na(cov_vax_admin_4$age12_plus_population))
+#there are no more NAs
+```
+```{r}
+# Get the rate of vaccination
+cov_vax_admin_5 <- cov_vax_admin_4 %>% group_by(county) %>%
+  summarise(total_vax = sum(new_value),
+            total_pop = sum(age12_plus_population),
+            rate = round((total_vax/total_pop)*100, 2))
 
+head(cov_vax_admin_5)
+```
 
+```{r}
+#install.packages("DT")
+library("DT")
 
-
-
-
-table(is.na(cov_vax_admin_1$persons_fully_vaccinated))
-
-cov_vax_admin_3 <- cov_vax_admin_2 %>%
-  group_by(county) %>%
-  summarize(mean_vax = mean(persons_fully_vaccinated, na.rm = T))
-  
+datatable(cov_vax_admin_5, 
+          options = list(
+            pageLength=5,
+            lengthMenu=c(5,10,15,58),
+            order=list(4,'desc'),
+            columnDefs=list(
+              list(className='dt-center',targets=1:3)
+              )
+            ),
+            colnames=c("County","Total Vaccinated","Total Population","Vaccination Rate"),
+            filter="top"
+          ) %>%
+          formatRound(2:4,2) %>%
+  formatStyle(1,color="blue")
 ```
 
 
