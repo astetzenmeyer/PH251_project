@@ -81,6 +81,19 @@ head(cov_vax_admin_5)
 ```
 
 ```{r}
+#Antoinette code
+
+total_pop <- ca_county_demographics %>%
+  select(name, pop2012, med_age) %>% 
+  mutate(name=str_to_upper(name))
+
+merged_median_age_cov_vax <-  inner_join(cov_vax_admin_5, total_pop, by=c("county"="name"))
+```
+
+
+
+
+```{r}
 install.packages("DT")
 library("DT")
 #make sure we put a title on this
@@ -99,6 +112,21 @@ datatable(cov_vax_admin_5,
           formatRound(2:4,2) %>%
   formatStyle(1,color="blue")
 
+# cov_vax_admin_3 <- cov_vax_admin_2 %>%
+#   group_by(county) %>%
+#   summarize(mean_vax = mean(persons_fully_vaccinated, na.rm = T))
+# 
+# #first determine "percentage of fully vaccinated persons."
+# cov_vax_admin_3 <-cov_vax_admin_2 %>%
+#   mutate(pct_fully_vax = round((
+#     persons_fully_vaccinated/age12_plus_population)*100,2))
+
+#get the mean rate for each county
+
+# mean_county_vax_rate <- cov_vax_admin_3 %>%
+#   group_by(county) %>%
+#   summarize(mean_vax_rate = mean(pct_fully_vax, na.rm = T))
+
 
 ```
 Median age vs. percentage of vaccination
@@ -110,6 +138,7 @@ In this block of the analysis we will join the demographic dataset with the perc
 ca_county_demographics_up <- ca_county_demographics %>% 
   mutate(uppercase_county = toupper(name)) %>%
   select(uppercase_county, med_age)
+
 
 
 joined_cov_vax_rate_med_age <- inner_join(cov_vax_admin_5,
@@ -140,5 +169,6 @@ We can put narrative here
            position = position_dodge()) + 
   coord_flip() +
   guides(fill = guide_legend(title = "")) 
+
 ```
 
