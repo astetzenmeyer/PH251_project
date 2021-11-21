@@ -163,12 +163,27 @@ We can put narrative here
 ```{r}
 #clean up axis titles
 #include description
- joined_cov_vax_rate_med_age %>%
-  ggplot(aes(county, med_age, fill = county)) +
+#actually, I just ordered the plot in the code that follows this one. Patrick 
+ # joined_cov_vax_rate_med_age %>%
+ #  ggplot(aes(county, med_age, fill = county)) +
+ #  geom_bar(stat = "identity", 
+ #           position = position_dodge()) + 
+ #  coord_flip() +
+ #  guides(fill = guide_legend(title = "")) 
+
+joined_cov_vax_rate_med_age %>%
+  arrange(med_age) %>%
+  mutate(county_ordered = factor(county,
+                                 levels = county,
+                                 labels = county,
+                                 ordered = T)) %>%
+  ggplot(aes(county_ordered, med_age, fill = county_ordered)) +
   geom_bar(stat = "identity", 
            position = position_dodge()) + 
-  coord_flip() +
-  guides(fill = guide_legend(title = "")) 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  coord_flip() + 
+  theme(legend.position = "none")
+
 
 ```
 
