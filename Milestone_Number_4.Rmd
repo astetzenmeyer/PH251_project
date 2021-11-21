@@ -2,7 +2,9 @@
 title: "Miletone_No_4"
 author: "Patrick Traynor, Ph.D., R.D., Virginia Chan, Antoinette Stetzenmeyer"
 date: "11/11/2021"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
