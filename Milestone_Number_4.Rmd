@@ -1,7 +1,7 @@
 ---
-title: "Miletone_No_4"
+title: "Milestone_No_4"
 author: "Patrick Traynor, Ph.D., R.D., Virginia Chan, Antoinette Stetzenmeyer"
-date: "11/11/2021"
+date: "11/22/2021"
 output:
   html_document: default
   pdf_document: default
@@ -115,11 +115,9 @@ datatable(cov_vax_admin_5,
   formatStyle(1,color="blue")
 ```
 
-Interpretation: This table presents the total eligible population, persons fully vaccinated, and vaccination rate for each county in California. We see that the vaccination rate varies by county, ranging from 40% to 125%. (NOTE: Ask Yifan about the 100+ percents).
 
-Median age vs. percentage of vaccination
+Interpretation: This table presents the total eligible population, persons fully vaccinated, and vaccination rate for each county in California. We see that the vaccination rate varies by county, ranging from 40% to 125%. A possible explanation for counties with rates greater than 100% is that residents could have traveled to other counties to get vaccinated.
 
-In this block of the analysis we will join the demographic dataset with the percentage of vaccinated persons dataset.
 ```{r, include=FALSE}
 # Set county names of cov_demographics to uppercase, 
 # and select wanted columns
@@ -146,7 +144,7 @@ joined_cov_vax_rate_med_age %>%
   ggtitle("Prevalence of COVID vaccination rate and median age by counties in California")
 ```
 
-The scatterplot shows the relationship between the rate of COVID-19 vaccinations against the median age of each California county. Based on the line of best fit, there is small evidence that COVID-19 vaccination rate increases as the county median age increases. 
+Interpretation: The scatterplot shows the relationship between the rate of COVID-19 vaccinations against the median age of each California county. Based on the line of best fit, there is small evidence that COVID-19 vaccination rate increases as the county median age increases. 
 
 ```{r}
 joined_cov_vax_rate_med_age %>%
@@ -161,8 +159,9 @@ joined_cov_vax_rate_med_age %>%
   guides(fill = guide_legend(reverse = TRUE)) +
   coord_flip() +
   theme(legend.position = "none") + 
-  labs(title = "Median age of each county in California", y= "Median age", x= "County")
+  labs(title = "Median age of each county in California", y= "Median age", x= "County") + 
+  theme(axis.text=element_text(size=6))
 
 ```
 
-This vertical bar chart presents the median age of each county in California. Overall, in California as a whole, the median age is less than 50 years old with each county's median age ranging from 30 to 50 years old.
+Interpretation: This vertical bar chart presents the median age of each county in California. Overall, in California as a whole, the median age is less than 50 years old with each county's median age ranging from 30 to 50 years old.
