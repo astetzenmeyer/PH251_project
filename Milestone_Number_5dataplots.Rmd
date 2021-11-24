@@ -121,7 +121,7 @@ datatable(joined_cov_vax_rate_med_age,
             lengthMenu=c(5,10,15,58),
             order=list(4,'desc'),
             columnDefs=list(
-              list(className='dt-center',targets=2:4)
+              list(className='dt-center',targets=2:5)
               )
             ),
             colnames=c("County","Total Vaccinated","Total Population","Vaccination Rate", "Median Age"),
