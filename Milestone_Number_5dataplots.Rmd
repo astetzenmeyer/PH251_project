@@ -137,7 +137,7 @@ datatable(joined_cov_vax_rate_med_age,
 
 
 
-```{r, echo= F}
+```{r, include=F, echo= F}
 datatable(cov_vax_admin_5, 
           options = list(
             pageLength=5,
@@ -173,7 +173,7 @@ joined_cov_vax_rate_med_age <- inner_join(cov_vax_admin_5,
            arrange(med_age)
 ```
 
-```{r, echo=F}
+```{r, echo=F, message = FALSE}
 joined_cov_vax_rate_med_age %>%
   ggplot(aes(x = rate, y = med_age)) +
   geom_point() +
