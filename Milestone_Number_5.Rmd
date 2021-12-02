@@ -20,6 +20,10 @@ library("DT")
 ca_county_demographics <- read_csv("ca_county_demographics.csv")
 cov_vax_admin <- read_csv("cov_vax_admin.csv")
 
+install.packages("ggpubr")
+library("ggpubr")
+
+
 ```
 
 ```{r, include=FALSE}
@@ -185,6 +189,53 @@ joined_cov_vax_rate_med_age %>%
 ```
 
 Interpretation: The scatterplot shows the relationship between the rate of COVID-19 vaccinations against the median age of each California county. Based on the line of best fit, there is small evidence that COVID-19 vaccination rate increases as the county median age increases. 
+
+
+```{r, echo=F, message = FALSE}
+
+
+ggscatter(joined_cov_vax_rate_med_age, x = "rate", y = "med_age", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Prevalence of COVID Vaccination", ylab = "Median Age")
+
+
+```
+
+
+
+
+
+```{r, echo=F, message = FALSE}
+joined_cov_vax_rate_med_age %>%
+  ggplot(aes(x = med_age, y = rate)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  theme_bw() +
+  xlab("Median age") +
+  ylab("Prevalence of COVID vaccination") +
+  ggtitle("Prevalence of COVID vaccination rate and median age by counties in California")
+
+
+
+```
+
+```{r, echo=F, message = FALSE}
+
+
+
+ggscatter(joined_cov_vax_rate_med_age, x = "med_age", y = "rate", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Median Age", ylab = "Prevalence of COVID Vaccination")
+
+
+
+
+```
+
+
+
 
 ```{r, echo=FALSE}
 joined_cov_vax_rate_med_age %>%
