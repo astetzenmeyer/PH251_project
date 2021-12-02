@@ -162,6 +162,9 @@ datatable(cov_vax_admin_5,
 
 Interpretation: This table presents the total eligible population, persons fully vaccinated, and vaccination rate for each county in California. We see that the vaccination rate varies by county, ranging from 40% to 125%. A possible explanation for counties with rates greater than 100% is that residents could have traveled to other counties to get vaccinated.
 
+
+\newpage 
+
 ```{r, include=FALSE}
 # Set county names of cov_demographics to uppercase, 
 # and select wanted columns
@@ -204,7 +207,7 @@ ggscatter(joined_cov_vax_rate_med_age, x = "rate", y = "med_age",
 
 
 
-
+\newpage 
 
 ```{r, echo=F, message = FALSE}
 joined_cov_vax_rate_med_age %>%
@@ -234,7 +237,7 @@ ggscatter(joined_cov_vax_rate_med_age, x = "med_age", y = "rate",
 
 ```
 
-
+\newpage 
 
 
 ```{r, echo=FALSE}
