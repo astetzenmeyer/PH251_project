@@ -1,0 +1,315 @@
+---
+title: "Milestone_No_5 Post Feedback"
+author: "Patrick Traynor, Ph.D., R.D., Virginia Chan, Antoinette Stetzenmeyer"
+date: "11/22/21"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+#import data sets
+library(readr)
+install.packages("DT")
+library("DT")
+ca_county_demographics <- read_csv("ca_county_demographics.csv")
+cov_vax_admin <- read_csv("cov_vax_admin.csv")
+
+install.packages("ggpubr")
+library("ggpubr")
+
+
+```
+
+Problem Statement
+(Rubric: Include 1-2 paragraphs describing the scenario that your team is aiming to address. This can be similar to the scenario text, but please phrase in your own words.) 
+
+There is a growing concern that counties with younger median ages are less likely to have higher counts of vaccinated persons. To investigate this, we explored the California Census Demographics and the California COVID-19 Vaccinations by Zip Code datasets to compare the median age and proportions of vaccinated persons on a county level. By comparing these two variables, we can determine if there is any relationship between median age and vaccination rate in California. 
+
+Methods
+(Rubric: Describe data sources, years and/or dates of data, methods used, strategies for data cleaning, creating new variables, decisions team made about the data, and additional wrangling done for visualizations.) 
+
+Our two main datasets are the COVID-19 Vaccine Administered by Zip Code and the California County Demographics. The vaccine dataset is from the California Immunization Registry and the American Community Survey’s 2015-2019 5-Year data, and the demographics data is from the California Census. Before the analysis, both datasets needed to be cleaned. Within the vaccine dataset, we selected the date, zip code, county, persons fully vaccinated, and age 12+ population columns, then filtered the date to keep only the most current data from 9/14/21. 
+
+Certain zip codes were missing counts of persons fully vaccinated so we replaced those ‘NA’ values with the county level average. We accomplished this by grouping the data by county, computed the county level mean, then created a new column for the count of fully vaccinated without missing values using an if else function where the county mean would replace the missing value or else keep it as is. The county vaccination rate was calculated by dividing the number of persons fully vaccinated by the age 12+ population per county.  
+
+The median age and county columns were the only needed variables from the demographics dataset, so the dataset was condensed by only selecting for those two variables. The county name was changed to uppercase to create a key where the demographic dataset could be joined to the vaccine dataset. After joining both datasets, we performed an analysis on the resulting data. We used the datatable function to produce a print quality table of the COVID-19 vaccination rate per California county and the median age of each county. We used the ggplot function to produce a scatterplot of the relationship between county level median age and vaccination rate. Lastly, we also used the ggplot function to visualize a vertical bar chart of the median age per county. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, include=FALSE}
+#First select columns needed from cov_vax_admin
+library(magrittr)
+library(tidyverse)
+cov_vax_admin_1 <- cov_vax_admin %>%
+  select (as_of_date, zip_code_tabulation_area, 
+county, persons_fully_vaccinated, age12_plus_population)
+
+```
+
+```{r, include=FALSE}
+#get unique dates to select the most recent:
+library(lubridate)
+date <- mdy(unique(cov_vax_admin$as_of_date))
+sort(date)
+
+unique(cov_vax_admin$as_of_date)
+cov_vax_admin_2 <- cov_vax_admin_1 %>%
+  filter(as_of_date == "9/14/2021")
+         
+# calculate average vaccination rate by county
+# Your task is to explore the Vaccine Progress Dashboard and locate the most recent vaccination data, including a percentage of fully vaccinated persons. If you find any missing values, you'll need to find a way to do *mean imputation* with the missing values on a zip code level, (substitute an average value to fill in the NAs values from the county level averages)
+
+
+
+#get the mean rate for each county
+
+means_by_county <- cov_vax_admin_2 %>% 
+  group_by(county) %>%
+  summarize(mean = mean(persons_fully_vaccinated, na.rm = T))
+
+# Remove NA counties because we don't know which county they are 
+cov_vax_admin_2 <- cov_vax_admin_2 %>% 
+  drop_na(county)
+
+#check to see if there are any NA's
+table(is.na(cov_vax_admin_2$persons_fully_vaccinated))
+#yes there are
+
+# Inner join mean values into the cov_vax_admin_2 table
+cov_vax_admin_3 <- inner_join(cov_vax_admin_2, means_by_county,
+              by = "county")
+
+cov_vax_admin_4 <- cov_vax_admin_3 %>% 
+  mutate(num_fully_vax_wo_NA = if_else(is.na(persons_fully_vaccinated),
+                                    mean,
+                                    persons_fully_vaccinated))
+  
+```
+
+```{r, include=FALSE}
+table(is.na(cov_vax_admin_4$age12_plus_population))
+#there are no more NAs
+```
+
+```{r, include=FALSE}
+# Get the rate of vaccination
+cov_vax_admin_5 <- cov_vax_admin_4 %>% 
+  group_by(county) %>%
+  summarize(total_vax = sum(num_fully_vax_wo_NA),
+            total_pop = sum(age12_plus_population),
+            rate = round((total_vax/total_pop)*100, 2))
+
+head(cov_vax_admin_5)
+```
+
+```{r, include= FALSE}
+#Antoinette code
+
+total_pop <- ca_county_demographics %>%
+  select(name, pop2012, med_age) %>% 
+  mutate(name=str_to_upper(name))
+
+merged_median_age_cov_vax <-  inner_join(cov_vax_admin_5, total_pop, by=c("county"="name"))
+```
+
+```{r, include= FALSE, echo=T}
+#antoinette code to add median age
+
+ca_county_demographics_up <- ca_county_demographics %>% 
+  mutate(uppercase_county = toupper(name)) %>%
+  select(uppercase_county, med_age)
+
+
+
+joined_cov_vax_rate_med_age <- inner_join(cov_vax_admin_5,
+                                          ca_county_demographics_up, 
+           by = c("county" = "uppercase_county"))%>%
+           arrange(med_age)
+```
+
+Results 
+(Rubric: Describe the results of your analysis, including what is displayed in the visualizations. (Note: no statistical testing is needed)
+
+The first table presents the total eligible population, persons fully vaccinated, vaccination rate, and the median age for each county in California. The vaccination rate varies by county, ranging from 40% to 125%. A possible explanation for counties with rates greater than 100% is that residents could have traveled to other counties to get vaccinated.
+
+
+
+
+
+
+```{r, echo=F}
+
+datatable(joined_cov_vax_rate_med_age, 
+          options = list(
+            pageLength=5,
+            lengthMenu=c(5,10,15,58),
+            order=list(4,'desc'),
+            columnDefs=list(
+              list(className='dt-center',targets=2:5)
+              )
+            ),
+            colnames=c("County","Total Vaccinated","Total Population","Vaccination Rate", "Median Age"),
+            caption = "COVID-19 Vaccination Rate per County in California",
+            filter="top"
+          ) %>%
+          formatRound(2:4,2) %>%
+  formatStyle(1,color="blue")
+
+```
+
+
+
+
+
+```{r, include=F, echo= F}
+datatable(cov_vax_admin_5, 
+          options = list(
+            pageLength=5,
+            lengthMenu=c(5,10,15,58),
+            order=list(4,'desc'),
+            columnDefs=list(
+              list(className='dt-center',targets=2:4)
+              )
+            ),
+            colnames=c("County","Total Vaccinated","Total Population","Vaccination Rate"),
+            caption = "COVID-19 Vaccination Rate per County in California",
+            filter="top"
+          ) %>%
+          formatRound(2:4,2) %>%
+  formatStyle(1,color="blue")
+```
+
+
+
+
+\newpage 
+
+```{r, include=FALSE}
+# Set county names of cov_demographics to uppercase, 
+# and select wanted columns
+ca_county_demographics_up <- ca_county_demographics %>% 
+  mutate(uppercase_county = toupper(name)) %>%
+  select(uppercase_county, med_age)
+
+
+
+joined_cov_vax_rate_med_age <- inner_join(cov_vax_admin_5,
+                                          ca_county_demographics_up, 
+           by = c("county" = "uppercase_county"))%>%
+           arrange(med_age)
+```
+
+```{r, include=F}
+joined_cov_vax_rate_med_age %>%
+  ggplot(aes(x = rate, y = med_age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  theme_bw() +
+  xlab("Prevalence of COVID vaccination") +
+  ylab("Median age") +
+  ggtitle("Prevalence of COVID vaccination rate and median age by counties in California")
+```
+
+
+
+
+```{r, include=F}
+
+
+ggscatter(joined_cov_vax_rate_med_age, x = "rate", y = "med_age", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Prevalence of COVID Vaccination", ylab = "Median Age")
+
+
+```
+
+
+We created a scatter plot to determine if there is a strong correlative relationship between median age and vaccination on a county level. Each point in the plot represents a county. The scatterplot shows a weak correlation because the points are scattered between 40-80% rate with no particular pattern. There are 4 outliers with 3 that have a rate greater than 100%. The blue line of best fit is not very linear, further supporting the weak association we see between the variables.  
+
+
+
+```{r, echo=F, message = FALSE}
+joined_cov_vax_rate_med_age %>%
+  ggplot(aes(x = med_age, y = rate)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  theme_bw() +
+  xlab("Median age") +
+  ylab("Prevalence of COVID vaccination") +
+  ggtitle("Prevalence of COVID vaccination rate and median age by counties in California")
+
+
+
+```
+
+
+
+
+```{r, include = FALSE}
+
+
+
+ggscatter(joined_cov_vax_rate_med_age, x = "med_age", y = "rate", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Median Age", ylab = "Prevalence of COVID Vaccination")
+
+
+
+
+```
+
+This vertical bar chart presents the median age of each county in California. Overall, in California as a whole, the median age is less than 50 years old with each county's median age ranging from 30 to 50 years old. 
+
+
+```{r, echo=FALSE}
+joined_cov_vax_rate_med_age %>%
+  arrange(med_age) %>%
+  mutate(county_ordered = factor(county,
+                                 levels = county,
+                                 labels = county,
+                                 ordered = T)) %>%
+  ggplot(aes(county_ordered, med_age, fill = county_ordered)) +
+  geom_bar(stat = "identity", 
+           position = position_dodge()) + 
+  guides(fill = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  theme(legend.position = "none") + 
+  labs(title = "Median age of each county in California", y= "Median age", x= "County") + 
+  theme(axis.text=element_text(size=6))
+
+```
+
+Discussion 
+(Rubric: Provide interpretation of results and what they tell your team about the given scenario.) 
+
+Based on the scatterplot and table, we can sort median age compared to vaccination rates.  
+The data does not support the concern that counties with younger median ages are less likely to have higher counts of vaccinated persons. Yolo County also has a median age around 30 yet has almost twice the vaccination rate at 72%. The median age of Imperial County is 32 years old yet it’s vaccination rate is 84%, nearly 2.5 times the age. Mariposa County has the 4th oldest median age (49%) with the 3rd lowest vaccination rate (40%). 
+
+As of September, the vaccines were not approved for children less than 12 years old. 
+Perhaps, it appears that counties with younger median ages have lower vaccination rates because the ineligible children are included in the calculations. To get a more accurate view of the relationship, we used the age 12+ population as the denominator to calculate our vaccination rate. The weak correlation in the scatter plot provides evidence that we should not be too concerned about the counties with younger median ages. 
+
