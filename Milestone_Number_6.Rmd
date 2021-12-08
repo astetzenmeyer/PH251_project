@@ -28,7 +28,7 @@ library("ggpubr")
 
 PROBLEM STATEMENT
 
-There is a growing concern that counties with younger populations are less likely to have higher counts of vaccinated persons. To investigate this, we explored the California Census Demographics and the California COVID-19 Vaccinations by Zip Code data sets to compare the median age and proportions of vaccinated persons on a county level. By comparing these two variables, we can determine if there is any relationship between age and vaccination rate in California. 
+There is a growing concern that counties with younger populations are less likely to have higher counts of vaccinated persons. To investigate this, we explored the California Census Demographics and the California COVID-19 Vaccinations by Zip Code datasets to compare the median age and proportions of vaccinated persons on a county level. By comparing these two variables, we can determine if there is any relationship between age and vaccination rate in California. 
 
 
 METHODS
