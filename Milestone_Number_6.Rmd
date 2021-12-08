@@ -1,5 +1,5 @@
 ---
-title: "Do Counties With Younger Median Ages Have Lower Vaccination Rates?"
+title: "Are Vaccination Rates Correlated with California County Median Ages?"
 author: "Patrick Traynor, Ph.D., R.D., Virginia Chan, Antoinette Stetzenmeyer"
 date: "12/07/21"
 output:
@@ -224,7 +224,7 @@ ggscatter(joined_cov_vax_rate_med_age, x = "rate", y = "med_age",
 ```
 
 
-We created a scatter plot to determine if there is a strong correlative relationship between median age and vaccination on a county level. Each point in the plot represents a county. The scatter plot shows a weak correlation because the points are scattered between 40-80% rate with no particular pattern. There are 4 outliers with 3 that have a rate greater than 100%. The blue line of best fit is not very linear, further supporting the weak association we see between the variables.  
+We created a scatter plot to determine if there is a strong correlative relationship between median age and vaccination on a county level. Each point in the plot represents a county. The scatter plot shows a weak correlation because the points are scattered between 40-80% rate with no particular pattern. There are three outliers that have a rate greater than 100%. The blue line of best fit is not very linear, further supporting the weak association we see between the variables.  
 
 
 
