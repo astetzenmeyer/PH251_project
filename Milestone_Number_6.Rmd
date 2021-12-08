@@ -1,5 +1,5 @@
 ---
-title: "Milestone_No_6"
+title: "Do Counties With Younger Median Ages Have Lower Vaccination Rates?"
 author: "Patrick Traynor, Ph.D., R.D., Virginia Chan, Antoinette Stetzenmeyer"
 date: "12/07/21"
 output:
