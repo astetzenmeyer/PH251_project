@@ -1,0 +1,73 @@
+---
+title: "EPA Project"
+author: "Virginia Chan, Patrick Traynor, Antoinette Stetzenmeyer"
+date: "11/13/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(tidyverse)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+
+library(readxl)
+Count_of_total_pesticide_illness_by_activity <- read_excel("~/PHW251_Fall2021/Count of total pesticide illness by activity.xlsx")
+
+
+```
+
+```{r}
+
+colnames(Count_of_total_pesticide_illness_by_activity)
+
+```
+
+```{r}
+
+pesticide_illness<- Count_of_total_pesticide_illness_by_activity %>%
+   rename( activity = "Count of Acute Pesticide-Related Illnesses by Activity, All Participating States, 1998 - 2011") %>%
+  rename(count =  "...2" ) %>%
+  select(!"...3") %>%
+ mutate(`count` = as.factor(`count`))
+ 
+
+ new_pesticide_illness <- na.omit(pesticide_illness)
+ 
+ new_pesticide_illness = new_pesticide_illness[-c(1),]
+ 
+ new_pesticide_illness <- new_pesticide_illness %>%
+   group_by(count) %>%
+   arrange(desc(count))
+ 
+ str(new_pesticide_illness)
+
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+
+ggplot(new_pesticide_illness , aes(x = count, y = activity)) +
+ geom_col(position = "dodge") +
+  labs(fill = "Group",
+       title = "Pesticide Illness")
+
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
