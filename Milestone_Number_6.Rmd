@@ -284,7 +284,7 @@ joined_cov_vax_rate_med_age %>%
 DISCUSSION 
 
 Based on the scatter plot and table, we can sort median age compared to vaccination rates.  
-The data do not support the concern that counties with younger median ages are less likely to have higher counts of vaccinated persons. Yolo County is the 3rd youngest county yet more than 70% of its eligible residents are vaccinated. The median age of Imperial County is 32 years old yet and 84% of the county is vaccinated. Mariposa County is the 3rd oldest county (49 years) with the 3rd lowest vaccination rate (40%). 
+The data do not support the concern that counties with younger median ages are less likely to have higher counts of vaccinated persons. Yolo County is the 3rd youngest county yet more than 70% of its eligible residents are vaccinated. The median age of Imperial County is 32 years old and 84% of the county is vaccinated. Mariposa County is the 3rd oldest county (49 years) with the 3rd lowest vaccination rate (40%). 
 
 As of September, the vaccines were not approved for children less than 12 years old. 
 Perhaps, it appears that counties with younger median ages have lower vaccination rates because the ineligible children are included in the calculations. To get a more accurate view of the relationship, we used the age 12+ population as the denominator to calculate our vaccination rate. The weak correlation in the scatter plot provides evidence that we should not be too concerned about the counties with younger median ages. 
